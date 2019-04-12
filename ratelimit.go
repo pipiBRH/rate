@@ -1,9 +1,6 @@
 package rate
 
 import (
-	"fmt"
-	"net/http"
-	"strings"
 	"sync"
 	"time"
 )
@@ -17,9 +14,12 @@ type LimitRate struct {
 }
 
 func NewLimiter(r int, cycle time.Duration) *LimitRate {
-	var lr LimitRate
-	lr.Set(r, cycle)
-	return &lr
+	return &LimitRate{
+		rate:  r,
+		begin: time.Now(),
+		cycle: cycle,
+		count: 0,
+	}
 }
 
 func (l *LimitRate) Allow() bool {
@@ -29,7 +29,7 @@ func (l *LimitRate) Allow() bool {
 	if l.count == l.rate {
 		now := time.Now()
 		if now.Sub(l.begin) >= l.cycle {
-			l.Reset(now)
+			l.reset(now)
 			return true
 		} else {
 			return false
@@ -40,14 +40,7 @@ func (l *LimitRate) Allow() bool {
 	}
 }
 
-func (l *LimitRate) Set(r int, cycle time.Duration) {
-	l.rate = r
-	l.begin = time.Now()
-	l.cycle = cycle
-	l.count = 0
-}
-
-func (l *LimitRate) Reset(t time.Time) {
+func (l *LimitRate) reset(t time.Time) {
 	l.begin = t
 	l.count = 0
 }
