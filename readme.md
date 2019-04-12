@@ -27,5 +27,10 @@ func main() {
     // false
     // false
     // false
+
+    fmt.Println(limiter.GetCount())
+
+    // Output:
+    // 5
 }
 ```
