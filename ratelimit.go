@@ -26,18 +26,16 @@ func (l *LimitRate) Allow() bool {
 	l.lock.Lock()
 	defer l.lock.Unlock()
 
-	if l.count == l.rate {
-		now := time.Now()
-		if now.Sub(l.begin) >= l.cycle {
-			l.reset(now)
-			return true
-		} else {
-			return false
-		}
-	} else {
-		l.count++
+	now := time.Now()
+	if now.Sub(l.begin) >= l.cycle {
+		l.reset(now)
 		return true
+	} else {
+		return false
 	}
+
+	l.count++
+	return true
 }
 
 func (l *LimitRate) reset(t time.Time) {
