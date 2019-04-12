@@ -30,7 +30,9 @@ func (l *LimitRate) Allow() bool {
 	if now.Sub(l.begin) >= l.cycle {
 		l.reset(now)
 		return true
-	} else {
+	}
+
+	if l.count == l.rate {
 		return false
 	}
 
@@ -40,7 +42,7 @@ func (l *LimitRate) Allow() bool {
 
 func (l *LimitRate) reset(t time.Time) {
 	l.begin = t
-	l.count = 0
+	l.count = 1
 }
 
 func (l *LimitRate) GetCount() int {
