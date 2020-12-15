@@ -6,10 +6,10 @@ import (
 )
 
 type LimitRate struct {
-	rate  int           //請求上限
-	begin time.Time     //週期開始時間
-	cycle time.Duration //週期
-	count int           //週期內請求次數
+	rate  int           // request limit
+	begin time.Time     // windows start time
+	cycle time.Duration // time window
+	count int           // reueests in one window
 	lock  sync.Mutex
 }
 
